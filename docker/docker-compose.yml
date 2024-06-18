@@ -1,5 +1,8 @@
-booking-api:
-  image: coelhocaique/booking-api
-  container_name: booking-api
-  ports:
-    - 8081:8081
+version: '3.8'
+
+services:
+  booking-api:
+    image: coelhocaique/booking-api
+    container_name: booking-api
+    ports:
+      - "8081:8081"
