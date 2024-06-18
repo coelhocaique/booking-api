@@ -15,10 +15,10 @@ import java.time.LocalDate;
 @Data
 public class PropertyBlockRequestDTO {
 
-    @NotNull
+    @NotNull(message = "Start Date cannot be null.")
     private LocalDate startDate;
 
-    @NotNull
+    @NotNull(message = "End Date cannot be null.")
     private LocalDate endDate;
 
     private String reason;

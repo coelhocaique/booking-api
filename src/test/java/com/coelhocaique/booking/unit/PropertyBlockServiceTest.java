@@ -1,10 +1,11 @@
-package com.coelhocaique.booking.service;
+package com.coelhocaique.booking.unit;
 
 import com.coelhocaique.booking.dto.PropertyBlockDTO;
 import com.coelhocaique.booking.dto.PropertyBlockRequestDTO;
 import com.coelhocaique.booking.entity.PropertyBlock;
 import com.coelhocaique.booking.exception.ValidationException;
 import com.coelhocaique.booking.repository.PropertyBlockRepository;
+import com.coelhocaique.booking.service.PropertyBlockService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -66,8 +67,8 @@ class PropertyBlockServiceTest {
 
         assertThrows(ValidationException.class, () -> service.create(PROPERTY_ID, propertyBlockRequest));
 
-        verify(repository, times(0)).save(any(PropertyBlock.class));
-        verify(repository, times(0)).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
+        verify(repository, never()).save(any(PropertyBlock.class));
+        verify(repository, never()).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
     }
 
     @Test
@@ -82,7 +83,7 @@ class PropertyBlockServiceTest {
 
         assertThrows(ValidationException.class, () -> service.create(PROPERTY_ID, propertyBlockRequest));
 
-        verify(repository, times(0)).save(any(PropertyBlock.class));
+        verify(repository, never()).save(any(PropertyBlock.class));
         verify(repository, times(1)).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
     }
 
@@ -94,8 +95,8 @@ class PropertyBlockServiceTest {
 
         assertThrows(ValidationException.class, () -> service.update(PROPERTY_ID, PROPERTY_BLOCK_ID, propertyBlockRequest));
 
-        verify(repository, times(0)).save(any(PropertyBlock.class));
-        verify(repository, times(0)).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
+        verify(repository, never()).save(any(PropertyBlock.class));
+        verify(repository, never()).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
         verify(repository).findByPropertyIdAndId(PROPERTY_ID, PROPERTY_BLOCK_ID);
     }
 
@@ -111,8 +112,8 @@ class PropertyBlockServiceTest {
 
         assertThrows(ValidationException.class, () -> service.update(PROPERTY_ID, PROPERTY_BLOCK_ID, propertyBlockRequest));
 
-        verify(repository, times(0)).save(any(PropertyBlock.class));
-        verify(repository, times(0)).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
+        verify(repository, never()).save(any(PropertyBlock.class));
+        verify(repository, never()).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
         verify(repository).findByPropertyIdAndId(PROPERTY_ID, PROPERTY_BLOCK_ID);
     }
 
@@ -131,7 +132,7 @@ class PropertyBlockServiceTest {
 
         assertThrows(ValidationException.class, () -> service.update(PROPERTY_ID, PROPERTY_BLOCK_ID, propertyBlockRequest));
 
-        verify(repository, times(0)).save(any(PropertyBlock.class));
+        verify(repository, never()).save(any(PropertyBlock.class));
         verify(repository).findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(PROPERTY_ID, propertyBlockRequest.getEndDate(), propertyBlockRequest.getStartDate());
         verify(repository).findByPropertyIdAndId(PROPERTY_ID, PROPERTY_BLOCK_ID);
     }
@@ -180,7 +181,7 @@ class PropertyBlockServiceTest {
 
         assertThrows(ValidationException.class, () -> service.delete(PROPERTY_ID, PROPERTY_BLOCK_ID));
 
-        verify(repository, times(0)).delete(propertyBlock);
+        verify(repository, never()).delete(propertyBlock);
         verify(repository).findByPropertyIdAndId(PROPERTY_ID, PROPERTY_BLOCK_ID);
     }
 

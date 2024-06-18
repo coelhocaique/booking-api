@@ -1,9 +1,9 @@
 package com.coelhocaique.booking.validator;
 
+import com.coelhocaique.booking.exception.ValidationException;
+import com.coelhocaique.booking.service.PropertyService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import com.coelhocaique.booking.service.PropertyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +15,9 @@ public class PropertyIdValidator implements ConstraintValidator<PropertyId, Long
 
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
-        return propertyService.findById(value).isPresent();
+        if (propertyService.findById(value).isEmpty()) {
+            throw ValidationException.propertyNotFound();
+        }
+        return true;
     }
 }

@@ -27,24 +27,23 @@ public class BookingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookingDTO> findById(@PathVariable Long id) {
-        return bookingService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        BookingDTO booking = bookingService.findById(id);
+        return ResponseEntity.ok(booking);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<BookingDTO> patch(@PathVariable Long id, @RequestBody UpdateBookingRequestDTO updateBookingRequest) {
+    @PutMapping("/{id}")
+    public ResponseEntity<BookingDTO> update(@PathVariable Long id, @RequestBody UpdateBookingRequestDTO updateBookingRequest) {
         BookingDTO bookingDTO = bookingService.update(id, updateBookingRequest);
         return ResponseEntity.ok(bookingDTO);
     }
 
-    @PutMapping("/{id}/cancel")
-    public ResponseEntity<Void> cancel(@PathVariable Long id) {
-        bookingService.cancel(id);
-        return ResponseEntity.ok().build();
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<BookingDTO> cancel(@PathVariable Long id) {
+        BookingDTO cancelledBooking = bookingService.cancel(id);
+        return ResponseEntity.ok(cancelledBooking);
     }
 
-    @PutMapping("/{id}/rebook")
+    @PatchMapping("/{id}/rebook")
     public ResponseEntity<BookingDTO> rebook(@PathVariable Long id) {
         BookingDTO rebookedBooking = bookingService.rebook(id);
         return ResponseEntity.ok(rebookedBooking);
@@ -53,6 +52,6 @@ public class BookingController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
         bookingService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

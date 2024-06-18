@@ -1,11 +1,12 @@
 plugins {
-	java
-	id("org.springframework.boot") version "2.7.18"
-	id("io.spring.dependency-management") version "1.1.5"
+	id 'application'
+	id 'java'
+	id 'org.springframework.boot' version '2.7.18'
+	id 'io.spring.dependency-management' version '1.1.5'
 }
 
-group = "com.coelhocaique"
-version = "0.0.1-SNAPSHOT"
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
@@ -13,10 +14,8 @@ java {
 	}
 }
 
-configurations {
-	compileOnly {
-		extendsFrom(configurations.annotationProcessor.get())
-	}
+bootRun {
+	main("com.coelhocaique.booking.BookingApiApplication")
 }
 
 repositories {
@@ -37,6 +36,9 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.withType<Test> {
+tasks.named('test') {
 	useJUnitPlatform()
 }
+
+distTar.enabled = false
+distZip.enabled = false

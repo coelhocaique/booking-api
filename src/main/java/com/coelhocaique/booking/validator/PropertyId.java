@@ -1,5 +1,6 @@
 package com.coelhocaique.booking.validator;
 
+import com.coelhocaique.booking.exception.ValidationException;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
@@ -15,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 public @interface PropertyId {
-    String message() default "Property ID doesn't exist!";
+    String message() default ValidationException.PROPERTY_ID_NOT_FOUND;
     Class <?> [] groups() default {};
     Class <? extends Payload> [] payload() default {};
 }

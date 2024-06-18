@@ -1,11 +1,17 @@
 package com.coelhocaique.booking.dto;
 
-import lombok.Builder;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Builder
+
 @Getter
+@AllArgsConstructor
 public class ErrorDTO {
 
-    private final String message;
+    private final List<String> errors;
+
+    public ErrorDTO(String error) {
+        this.errors = List.of(error);
+    }
 }

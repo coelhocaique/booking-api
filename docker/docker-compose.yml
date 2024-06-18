@@ -1,0 +1,5 @@
+booking-api:
+  image: coelhocaique/booking-api
+  container_name: booking-api
+  ports:
+    - 8082:8082

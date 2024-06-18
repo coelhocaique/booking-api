@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 import static java.util.Objects.nonNull;
 
@@ -26,13 +26,14 @@ public class BookingService {
 
     private final PropertyBlockService propertyBlockService;
     
-    public Optional<BookingDTO> findById(Long id) {
+    public BookingDTO findById(Long id) {
         return repository.findById(id)
-                .map(BookingMapper::toDTO);
+                .map(BookingMapper::toDTO)
+                .orElseThrow(ValidationException::bookingNotFound);
     }
     public BookingDTO create(CreateBookingRequestDTO createBookingRequest) {
+        validateOverlappingDates(createBookingRequest.getStartDate(), createBookingRequest.getEndDate(), createBookingRequest.getPropertyId(), false);
         Booking booking = BookingMapper.toEntity(createBookingRequest);
-        validateOverlappingDates(booking.getStartDate(), booking.getEndDate(), booking.getPropertyId());
         return BookingMapper.toDTO(repository.save(booking));
     }
 
@@ -42,6 +43,7 @@ public class BookingService {
             booking.setGuestInfo(updateBookingRequest.getGuestInfo());
         }
         if (nonNull(updateBookingRequest.getStartDate()) && nonNull(updateBookingRequest.getEndDate())) {
+            validateOverlappingDates(updateBookingRequest.getStartDate(), updateBookingRequest.getEndDate(), booking.getPropertyId(), true);
             booking.setStartDate(updateBookingRequest.getStartDate());
             booking.setEndDate(updateBookingRequest.getEndDate());
         }
@@ -49,15 +51,15 @@ public class BookingService {
         return BookingMapper.toDTO(repository.save(booking));
     }
 
-    public void cancel(Long id) {
+    public BookingDTO cancel(Long id) {
         Booking booking = findOne(id);
         booking.setStatus(BookingStatus.CANCELED);
-        repository.save(booking);
+        return BookingMapper.toDTO(repository.save(booking));
     }
 
     public BookingDTO rebook(Long id) {
         Booking booking = findOne(id);
-        validateOverlappingDates(booking.getStartDate(), booking.getEndDate(), booking.getPropertyId());
+        validateOverlappingDates(booking.getStartDate(), booking.getEndDate(), booking.getPropertyId(), false);
         booking.setStatus(BookingStatus.REBOOKED);
         return BookingMapper.toDTO(repository.save(booking));
     }
@@ -71,7 +73,7 @@ public class BookingService {
         return repository.findById(id).orElseThrow(ValidationException::bookingNotFound);
     }
 
-    private void validateOverlappingDates(LocalDate startDate, LocalDate endDate, Long propertyId) {
+    private void validateOverlappingDates(LocalDate startDate, LocalDate endDate, Long propertyId, boolean isUpdate) {
         if (endDate.isBefore(startDate)) {
             throw ValidationException.invalidDateInterval();
         }
@@ -82,7 +84,9 @@ public class BookingService {
                 endDate,
                 startDate);
 
-        if (bookings.size() > 0) {
+        int sizeToCompare = isUpdate ? 1 : 0;
+
+        if (bookings.size() > sizeToCompare) {
             throw ValidationException.propertyAlreadyBooked();
         }
 

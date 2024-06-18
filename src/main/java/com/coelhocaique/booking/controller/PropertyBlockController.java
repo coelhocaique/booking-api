@@ -35,7 +35,7 @@ public class PropertyBlockController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Validated(PropertyIdValidator.class) Long propertyId, @PathVariable Long id) {
         blockService.delete(propertyId, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
