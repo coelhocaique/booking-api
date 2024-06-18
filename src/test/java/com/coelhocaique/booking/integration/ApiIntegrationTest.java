@@ -32,6 +32,13 @@ public class ApiIntegrationTest {
                 "  \"start_date\": \"2024-06-17\"" +
                 "}";
 
+        String updateBookingJson = "{" +
+                "  \"end_date\": \"2024-06-19\"," +
+                "  \"guest_info\": \"Coelho Caique\"," +
+                "  \"property_id\": 1," +
+                "  \"start_date\": \"2024-06-17\"" +
+                "}";
+
         String propertyBlockJson = "{" +
                 "  \"end_date\": \"2024-06-19\"," +
                 "  \"reason\": \"Painting\"," +
@@ -49,12 +56,34 @@ public class ApiIntegrationTest {
                 .andExpect(jsonPath("$.end_date", equalTo("2024-06-18")))
                 .andExpect(jsonPath("$.guest_info", equalTo("Caique Coelho")));
 
+
+        // find booking to make sure it was created
+        mockMvc.perform(get("/bookings/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.property_id", is(1)))
+                .andExpect(jsonPath("$.start_date", equalTo("2024-06-17")))
+                .andExpect(jsonPath("$.end_date", equalTo("2024-06-18")))
+                .andExpect(jsonPath("$.guest_info", equalTo("Caique Coelho")));
+
         // try to create booking again, but should get 409
         mockMvc.perform(post("/bookings")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookingJson))
                 .andExpect(status().is(409))
                 .andExpect(jsonPath("$.errors.[0]", equalTo(PROPERTY_IS_ALREADY_BOOKED_FOR_THE_PERIOD_REQUESTED)));
+
+        // update booking guest info
+        mockMvc.perform(put("/bookings/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateBookingJson))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.property_id", is(1)))
+                .andExpect(jsonPath("$.start_date", equalTo("2024-06-17")))
+                .andExpect(jsonPath("$.end_date", equalTo("2024-06-19")))
+                .andExpect(jsonPath("$.guest_info", equalTo("Coelho Caique")));
 
         // try to cancel nonexistent booking
         mockMvc.perform(patch("/bookings/3/cancel")
