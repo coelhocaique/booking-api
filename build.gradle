@@ -3,6 +3,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.18'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'jacoco'
 }
 
 group = 'com.example'
@@ -42,3 +43,30 @@ tasks.named('test') {
 
 distTar.enabled = false
 distZip.enabled = false
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+
+	reports {
+		xml.required = true
+		csv.required = false
+		html.outputLocation = file("${buildDir}/reports/jacoco")
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					'**/*BookingApiApplication**',
+					'com/coelhocaique/booking/dto/**',
+					'com/coelhocaique/booking/controller/advice/**',
+					'com/coelhocaique/booking/entity/**',
+					'com/coelhocaique/booking/config/**'
+			])
+		}))
+	}
+}

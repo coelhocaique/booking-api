@@ -1,4 +1,7 @@
 # Booking API
+![CI](https://github.com/coelhocaique/booking-api/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/coelhocaique/booking-api/branch/main/graph/badge.svg)](https://codecov.io/gh/coelhocaique/booking-api)
+
 
 ## Technologies
 
