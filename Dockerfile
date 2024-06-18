@@ -1,7 +1,9 @@
-FROM openjdk:17
+FROM openjdk:17-slim
 
 LABEL source="https://github.com/coelhocaique/booking-api"\
       maintainer="Caique Coelho"
+
+RUN apt-get update && apt-get install -y unzip
 
 ADD ./build/distributions/*.zip /booking-api.zip
 

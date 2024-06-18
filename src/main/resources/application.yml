@@ -21,3 +21,6 @@ spring:
       mode: always
   jackson:
     property-naming-strategy: SNAKE_CASE
+
+server:
+  port: ${PORT:8081}
